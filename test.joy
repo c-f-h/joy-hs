@@ -1,0 +1,89 @@
+DEFINE true == 1 ;
+DEFINE false == 0 ;
+DEFINE not == null ;
+
+DEFINE unit == [] cons ;
+DEFINE x    == dup dip ;
+DEFINE i    == x pop ;
+DEFINE swap == unit dip ;
+
+DEFINE pop2 == pop pop ;
+DEFINE pop3 == pop pop pop ;
+
+DEFINE popd == [pop] dip ;
+DEFINE dupd == [dup] dip ;
+DEFINE swapd == [swap] dip ;
+
+DEFINE swons == swap cons ;
+DEFINE first == uncons pop ;
+DEFINE rest  == uncons swap pop ;
+
+DEFINE over  == [dup] dip swap ;
+DEFINE over2 == [over] dip swap ;
+DEFINE over3 == [over2] dip swap ;
+
+DEFINE dup2 == over over ;
+DEFINE dup3 == over2 over2 over2 ;
+
+DEFINE dip1 == dip ;
+DEFINE dip2 == [dip] cons dip ;
+DEFINE dip3 == [dip] cons [dip] cons dip ;
+
+DEFINE dig1 == swap ;
+DEFINE dig2 == [] cons cons dip ;
+DEFINE dig3 == [] cons cons cons dip ;
+
+DEFINE bury1 == swap ;
+DEFINE bury2 == [[] cons cons] dip swap i ;
+DEFINE bury3 == [[] cons cons cons] dip swap i ;
+
+DEFINE nullary == stack [i] dip cons unstack swap pop ;
+DEFINE unary   == stack [i] dip cons unstack [pop2] dip ;
+DEFINE binary  == stack [i] dip cons unstack [pop3] dip ;
+DEFINE unary2 == [unary] cons dup dip dip ;
+
+DEFINE infra == swons [stack] dip cons unstack [i stack] dip cons unstack ;
+
+DEFINE cleave == [dup] dip2 swap dip2 i ;
+
+DEFINE branch == [] bury2 ifte ;
+
+DEFINE in == [uncons [pop =] [pop3 1] [swap pop in] ifte] [pop2 0] branch ;
+DEFINE has == swap in ;
+
+DEFINE at == [[rest] dip 1 - at] [pop first] branch;
+DEFINE of == swap at ;
+
+DEFINE reverse  == [] swap reverse' ;
+DEFINE reverse' == [uncons [swons] dip reverse'] [pop] branch ;
+
+DEFINE times == [pop] [[1 -] dip dup dip2 times] [pop2] ifte;
+DEFINE repeat == [swons] cons [] bury2 times ;
+
+DEFINE primrec  == dig2 primrec' popd ;
+DEFINE primrec' == [bury2 over2 1 - primrec' dig2 over2 i] [pop swap i] branch ;
+
+DEFINE primrec2  == primrec2' [pop2] dip ;
+DEFINE primrec2' == [pop2] [[dup 1 -] dip2 primrec2' [pop] dip2 over2 over2 i] [swap i] ifte ;
+
+DEFINE primrec3  == primrec3' [pop3] dip ;
+DEFINE primrec3' == over2 [1 - over2 over2 primrec3' [pop3] dip over3 over2 i] [pop over i] branch ;
+
+DEFINE step == [pop] [[uncons] dip dup dip2 step ] [pop2] ifte ;
+DEFINE size == 0 swap [pop 1 +] step ;
+DEFINE map == [] bury2 [swons] append step reverse ;
+DEFINE fold == swapd step ;
+DEFINE filter == [] bury2 [[swons] [pop] ifte] cons step reverse ;
+
+DEFINE nub == [] swap [[has] [pop] [swons] ifte] step ;
+DEFINE nub2 == [] [[has] [pop] [swons] ifte] fold ;
+
+DEFINE fact == [dup 1 - fact *] [pop 1] branch ;
+DEFINE fib == [0 <=] [pop 1] [[1 - fib] [2 - fib] cleave +] ifte ;
+
+DEFINE even == 2 % 0 = ;
+DEFINE odd == even not ;
+
+DEFINE measure == time [i] dip time swap - ;
+
+[ 28 fib . ] measure

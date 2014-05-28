@@ -1,0 +1,31 @@
+Interpreter compiled with -O2 in ghc 6.10.4.
+
+Benchmarks:
+ (1): [ 100000 123 repeat size . ] measure
+ (2): [ 28 fib . ] measure
+
+
+== Original implementation ==============
+
+(1)
+100000
+Residual stack (top to bottom):
+2.450000047683716
+
+(2)
+832040
+Residual stack (top to bottom):
+15.77999997138977
+
+
+== Maps instead of assoc lists ==========
+
+(1)
+100000
+Residual stack (top to bottom):
+1.8499999046325684
+
+(2)
+832040
+Residual stack (top to bottom):
+8.98200011253357
